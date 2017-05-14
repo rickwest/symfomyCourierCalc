@@ -1,0 +1,65 @@
+{% extends ':default:index.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">New Quote</h4>
+                    <p class="category">Generate a new quotation</p>
+                </div>
+                <div class="content">
+                    {% form_theme form 'bootstrap_3_layout.html.twig' %}
+                    {{ form_start(form) }}
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form_row(form.startLocation) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.waypoints) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.finishLocation) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.vehicleType) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.feeScale) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(form.calloutCharge) }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-fill">Calculate</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqACoKPqvIrZ1EQp-njyExDg0oYaG_64o&libraries=places"></script>
+
+    <script type="text/javascript">
+        var startLocationInput = document.getElementById('quote_startLocation');
+        var finishLocationInput = document.getElementById('quote_finishLocation');
+
+        startLocationAutoautocomplete = new google.maps.places.Autocomplete(startLocationInput);
+        finishLocationAutoautocomplete = new google.maps.places.Autocomplete(finishLocationInput);
+
+        startLocationAutoautocomplete.addListener('place_changed', function(){
+            var startLocation =  startLocationAutoautocomplete.getPlace();
+            var startLat = startLocation.geometry.location.lat();
+            var startlon = startLocation.geometry.location.lng();
+        });
+
+        finishLocationAutoautocomplete.addListener('place_changed', function(){
+            var finishLocation =  finishLocationAutoautocomplete.getPlace();
+            var finishLat = finishLocation.geometry.location.lat();
+            var finishlon = finishLocation.geometry.location.lng();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends ':default:index.html.twig' %}
+
+{% block content %}
+
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="flash-notice">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Quote Summary</h4>
+                    <p class="category">Details</p>
+                </div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>Customer</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>Fee Scale</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>Vehicle</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>Notes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Journey Summary</h4>
+                    <p class="category"></p>
+                </div>
+                <div class="content">
+                    <p><strong>Origin:</strong> {{ origin }} </p>
+                    <p><strong>Destination:</strong> {{ destination }}</p>
+                    <p><strong>Via:</strong></p>
+                    <p><strong>Total Distance:</strong> {{ distance }}</p>
+                    <p><strong>Estimated Time:</strong> {{ route.duration.text }}</p>
+                    <div id="map" style="width:100%;height:500px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Quote</h4>
+                    <p class="category">Calculated costs</p>
+                </div>
+                <div class="content">
+                    <p><strong>Customer Charge:</strong> &pound;{{ total.price | number_format(2) }}</p>
+                    <p><strong>Driver Cost:</strong> &pound;{{ total.driverCost | number_format(2) }}</p>
+                    <p><strong>Margin:</strong> {{ (total.margin * 100) | number_format(2) }}&percnt;</p>
+                </div>
+                <div class="footer">
+                    <button class="btn btn-success btn-fill">Accept</button>
+                    <button class="btn btn-info btn-fill">Email</button>
+                    <button class="btn btn-danger btn-fill">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqACoKPqvIrZ1EQp-njyExDg0oYaG_64o&callback=initMap&libraries=places,geometry" async defer></script>
+    <script>
+        function initMap() {
+            var startLocation = {lat: {{ route.start_location.lat }}, lng: {{ route.start_location.lng }}};
+            var endLocation = {lat: {{ route.end_location.lat }}, lng: {{ route.end_location.lng }}};
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 3,
+                center: startLocation
+            });
+            var startMarker = new google.maps.Marker({
+                position: startLocation,
+                map: map,
+                title: 'Origin'
+            });
+            var endMarker = new google.maps.Marker({
+                position: endLocation,
+                map: map,
+                title: 'Destination'
+            });
+            {#var route = new google.maps.Polyline({#}
+                {#path: google.maps.geometry.encoding.decodePath("{{ polyline | raw }}"),#}
+                {#geodesic: true,#}
+                {#strokeColor: '#FF0000',#}
+                {#strokeOpacity: 1.0,#}
+                {#strokeWeight: 2#}
+            {#});#}
+
+                {#route.setMap(map);#}
+        }
+    </script>
+
+
+{% endblock %}
+

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{% if app.request.hasPreviousSession %}
+    {% for type, messages in app.session.flashbag.all() %}
+        {% for message in messages %}
+            <div class="flash-{{ type }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+<div class="wrapper wrapper-full-page">
+    <div class="full-page login-page" data-color="red" data-image="assets/img/road.jpg">
+        <div class="full-page-background" style="background-image: url('assets/img/road.jpg')"></div>
+        <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+                        {% block fos_user_content %}
+                        {% endblock fos_user_content %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer footer-transparent">
+            <div class="container">
+                <p class="copyright text-center" style="color:#ffffff">&copy;{{ 'now' | date('Y') }} Courier Calc. A smoother journey <i class="fa fa-car"></i></p>
+            </div>
+        </footer>
+    </div>
+</div>
+
+
+{% endblock %}
+

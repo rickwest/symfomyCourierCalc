@@ -1,0 +1,24 @@
+parameters:
+    google_api_key: AIzaSyAqACoKPqvIrZ1EQp-njyExDg0oYaG_64o
+
+#services:
+    #service_name:
+    #    class: AppBundle\Directory\ClassName
+    #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
+services:
+    google_direction_api:
+        class: AppBundle\GoogleApi\GoogleDirectionsApi
+        arguments: ['%google_api_key%']
+
+    quote_creator:
+        class: AppBundle\Quote\QuoteCreator
+
+    choice_helper:
+        class: AppBundle\Form\ChoiceHelper\ChoiceHelper
+        arguments: ['@doctrine']
+
+    quote_form:
+        class: AppBundle\Form\Type\QuoteType
+        arguments: ['@choice_helper']
+        tags:
+            - { name: form.type }
